@@ -20,12 +20,12 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use('/api', authRoutes);
 
-// Serve static files from the frontend directory
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Serve static files from the FrontEnd directory
+app.use(express.static(path.join(__dirname, '../FrontEnd')));
 
 // Serve index.html for the root URL
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, '../FrontEnd/index.html'));
 });
 
 // Socket.io signaling server for WebRTC
