@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Student Video Conference - TrackSmart</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; padding: 0;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background: #3b5998;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        #videos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 10px;
+            gap: 10px;
+            overflow-y: auto;
+            background: white;
+        }
+        video {
+            border-radius: 8px;
+            background: black;
+            width: 320px;
+            height: 240px;
+            object-fit: cover;
+        }
+        #controls {
+            background: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            border-top: 1px solid #ccc;
+        }
+        button {
+            background: #3b5998;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+        #monitoring-status {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>TrackSmart - Student Video Conference</header>
+    <div id="videos">
+        <video id="localVideo" autoplay muted playsinline></video>
+    </div>
+    <div id="controls">
+        <button id="muteBtn">Mute</button>
+        <button id="cameraBtn">Stop Camera</button>
+        <button id="leaveBtn">Leave Call</button>
+    </div>
+    <div id="monitoring-status">Attention Alert: Please focus on the class!</div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const localVideo = document.getElementById('localVideo');
+        const videosContainer = document.getElementById('videos');
+        const muteBtn = document.getElementById('muteBtn');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const leaveBtn = document.getElementById('leaveBtn');
+        const monitoringStatus = document.getElementById('monitoring-status');
+
+        let localStream;
+        let peers = {};
+        let isMuted = false;
+        let isCameraOff = false;
+        const roomId = 'classroom1'; // For demo, static room id
+        const userId = Math.floor(Math.random() * 10000).toString();
+
+        // For demo, user role is stored in localStorage (should be set after login)
+        const userRole = localStorage.getItem('userRole') || 'student';
+
+        async function startLocalStream() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localVideo.srcObject = localStream;
+            } catch (err) {
+                alert('Could not access camera and microphone.');
+                console.error(err);
+            }
+        }
+
+        function createPeerConnection(peerId) {
+            const pc = new RTCPeerConnection({
+                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+            });
+
+            pc.onicecandidate = event => {
+                if (event.candidate) {
+                    socket.emit('signal', { to: peerId, candidate: event.candidate, from: userId });
+                }
+            };
+
+            pc.ontrack = event => {
+                if (!document.getElementById(peerId)) {
+                    const remoteVideo = document.createElement('video');
+                    remoteVideo.id = peerId;
+                    remoteVideo.autoplay = true;
+                    remoteVideo.playsInline = true;
+                    remoteVideo.srcObject = event.streams[0];
+                    videosContainer.appendChild(remoteVideo);
+                }
+            };
+
+            localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+            return pc;
+        }
+
+        socket.on('connect', () => {
+            socket.emit('join-room', roomId, userId, userRole);
+        });
+
+        socket.on('user-connected', peerId => {
+            const pc = createPeerConnection(peerId);
+            peers[peerId] = pc;
+
+            pc.createOffer().then(offer => {
+                pc.setLocalDescription(offer);
+                socket.emit('signal', { to: peerId, sdp: offer, from: userId });
+            });
+        });
+
+        socket.on('signal', async data => {
+            const { from, sdp, candidate } = data;
+            if (!peers[from]) {
+                peers[from] = createPeerConnection(from);
+            }
+            const pc = peers[from];
+
+            if (sdp) {
+                await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+                if (sdp.type === 'offer') {
+                    const answer = await pc.createAnswer();
+                    await pc.setLocalDescription(answer);
+                    socket.emit('signal', { to: from, sdp: answer, from: userId });
+                }
+            } else if (candidate) {
+                await pc.addIceCandidate(new RTCIceCandidate(candidate));
+            }
+        });
+
+        socket.on('user-disconnected', peerId => {
+            if (peers[peerId]) {
+                peers[peerId].close();
+                delete peers[peerId];
+                const video = document.getElementById(peerId);
+                if (video) {
+                    video.remove();
+                }
+            }
+        });
+
+        muteBtn.onclick = () => {
+            isMuted = !isMuted;
+            localStream.getAudioTracks()[0].enabled = !isMuted;
+            muteBtn.textContent = isMuted ? 'Unmute' : 'Mute';
+        };
+
+        cameraBtn.onclick = () => {
+            isCameraOff = !isCameraOff;
+            localStream.getVideoTracks()[0].enabled = !isCameraOff;
+            cameraBtn.textContent = isCameraOff ? 'Start Camera' : 'Stop Camera';
+        };
+
+        leaveBtn.onclick = () => {
+            for (let peerId in peers) {
+                peers[peerId].close();
+                const video = document.getElementById(peerId);
+                if (video) video.remove();
+            }
+            peers = {};
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+            window.location.href = '/';
+        };
+
+        // Monitoring feature: show alert only if user is admin
+        function simulateMonitoring() {
+            if (userRole === 'admin') {
+                // Randomly show alert for demo
+                const alertOn = Math.random() < 0.1;
+                monitoringStatus.style.display = alertOn ? 'block' : 'none';
+            } else {
+                monitoringStatus.style.display = 'none';
+            }
+        }
+
+        startLocalStream().then(() => {
+            setInterval(simulateMonitoring, 5000);
+        });
+    </script>
+</body>
+</html>
