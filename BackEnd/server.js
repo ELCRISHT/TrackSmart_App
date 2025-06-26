@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path'); // Import path module
 const http = require('http');
 const socketIo = require('socket.io');
+const cors = require('cors');
 const authRoutes = require('./routes/auth');
 
 const app = express();
@@ -11,6 +12,11 @@ const io = socketIo(server);
 
 const PORT = process.env.PORT || 3000;
 
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 app.use(bodyParser.json());
 app.use('/api', authRoutes);
 
