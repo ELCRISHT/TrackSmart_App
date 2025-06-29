@@ -81,7 +81,7 @@
         <button id="muteBtn">Mute</button>
         <button id="cameraBtn">Stop Camera</button>
         <button id="leaveBtn">Leave Call</button>
-    </div>
+</div>
     <div id="monitoring-status">Attention Alert: Please focus on the class!</div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -224,6 +224,41 @@
         startLocalStream().then(() => {
             setInterval(simulateMonitoring, 5000);
         });
+
+        function leaveCall() {
+    // Show confirmation
+    const confirmLeave = confirm('Are you sure you want to leave the meeting?');
+    
+    if (confirmLeave) {
+        // Clean up media streams
+        if (window.localStream) {
+            window.localStream.getTracks().forEach(track => {
+                track.stop();
+            });
+        }
+        
+        // Clean up peer connections
+        if (window.peerConnections) {
+            Object.values(window.peerConnections).forEach(pc => {
+                pc.close();
+            });
+        }
+        
+        // Optional: Send leave notification to other participants
+        // sendLeaveNotification();
+        
+        // Redirect back to dashboard
+        window.location.href = 'dashboard.html';
+    }
+}
+
+// Also handle page unload (browser close, refresh, etc.)
+window.addEventListener('beforeunload', function(e) {
+    // Clean up resources
+    if (window.localStream) {
+        window.localStream.getTracks().forEach(track => track.stop());
+    }
+});
     </script>
 </body>
 </html>

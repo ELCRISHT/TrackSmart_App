@@ -26,7 +26,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             localStorage.setItem('userRole', data.user.role);
 
             // Redirect to video conferencing page
-            window.location.href = '/video_conference.html';
+            window.location.href = '/dashboard.html';
         } else {
             alert(data.message || 'Login failed.');
         }
