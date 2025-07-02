@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - TrackSmart</title>
+    <link rel="stylesheet" href="styles/aboutus.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="top-header">
+        <div class="logo-section">
+            <div class="logo-icon">TS</div>
+            <div class="logo-title">TrackSmart</div>
+        </div>
+        
+        <a href="javascript:history.back()" class="back-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5"/>
+                <path d="M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Dashboard
+        </a>
+    </div>
+    
+    <div class="main-content">
+        <div class="content-container">
+            <div class="hero-section">
+                <h1 class="hero-title">About TrackSmart</h1>
+                <p class="hero-subtitle">Revolutionizing classroom management and virtual meetings with cutting-edge technology designed for the modern educational experience.</p>
+            </div>
+
+
+            <div class="section">
+                <h2 class="section-title">Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #FF8C00, #FF6B35);">🎥</div>
+                        <h3 class="feature-title">High-Quality Video Conferencing</h3>
+                        <p class="feature-description">Crystal-clear video and audio with advanced noise cancellation and real-time collaboration tools.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #007BFF, #0056b3);">📊</div>
+                        <h3 class="feature-title">Smart Analytics</h3>
+                        <p class="feature-description">Comprehensive reporting and analytics to track student engagement and meeting effectiveness.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #8A2BE2, #6A1B9A);">📅</div>
+                        <h3 class="feature-title">Intelligent Scheduling</h3>
+                        <p class="feature-description">AI-powered scheduling that optimizes meeting times and manages classroom resources efficiently.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #FFD700, #FFA500);">🔒</div>
+                        <h3 class="feature-title">Enterprise Security</h3>
+                        <p class="feature-description">Bank-level encryption and security protocols to protect sensitive educational data.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #32CD32, #228B22);">🌐</div>
+                        <h3 class="feature-title">Cross-Platform Access</h3>
+                        <p class="feature-description">Seamless experience across all devices - desktop, tablet, and mobile platforms.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #FF69B4, #DC143C);">⚡</div>
+                        <h3 class="feature-title">Real-Time Collaboration</h3>
+                        <p class="feature-description">Interactive whiteboards, screen sharing, and collaborative tools for enhanced learning.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="contact-section">
+                <h2 class="contact-title">Get in Touch</h2>
+                <div class="contact-info">
+                    <p>Ready to transform your classroom experience?</p>
+                    <p>📧 contact@tracksmart.edu</p>
+                    <p>📞 1-800-TRACK-SMART</p>
+                    <p>🌐 www.tracksmart.edu</p>
+                    <br>
+                    <p>Follow us on social media for the latest updates and educational insights!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add scroll animation to sections
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(section);
+            });
+        });
+
+        // Initialize particles
+        createParticles();
+
+        // Add some interactive elements
+        document.querySelectorAll('.feature-card, .team-member, .stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

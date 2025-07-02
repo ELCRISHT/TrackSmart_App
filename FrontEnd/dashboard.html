@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting Dashboard</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
     <style>
         * {
             margin: 0;
@@ -484,6 +484,7 @@
                 opacity: 0;
             }
         }
+        
     </style>
 </head>
 <body>
@@ -615,7 +616,7 @@
         }
 
         function handleProfile() {
-            alert('Opening profile settings...');
+            window.location.href = 'profile.html';
             toggleUserDropdown();
         }
 
@@ -625,7 +626,7 @@
         }
 
         function handleAboutUs() {
-            alert('TrackSmart v1.0\n\nA modern classroom management and meeting platform designed to enhance educational experiences.\n\nDeveloped with ❤️ for educators and students.');
+            window.location.href = 'aboutus.html';
             toggleUserDropdown();
         }
 
@@ -647,7 +648,7 @@
         // Button handlers
         function handleNewMeeting() {
             // Redirect to video conference page
-            window.location.href = 'video_conference.html';
+            window.location.href = 'meeting.html';
         }
 
         function handleJoinMeeting() {

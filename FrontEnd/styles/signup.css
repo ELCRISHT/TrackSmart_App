@@ -7,11 +7,12 @@
 
         body {
             background: linear-gradient(135deg, #2D1B69 0%, #1a0f3d 50%, #000000 100%);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center; /* Center the container horizontally */
+            justify-content: center;
             color: white;
+            padding: 20px;
         }
 
         .logo-container {
@@ -22,37 +23,55 @@
             align-items: center;
             gap: 12px;
             z-index: 100;
+            animation: slideInLeft 0.6s ease-out;
         }
 
         .logo {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc05 100%);
+            background: linear-gradient(135deg, #007BFF, #0056b3);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
             font-size: 20px;
-            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
         }
 
         .logo-text {
-            font-size: 24px;
+            font-size: 25px;
             font-weight: 700;
-            background: linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc05 100%);
+            background: linear-gradient(135deg, #007BFF, #0056b3);
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
         }
 
         .container {
             width: 100%;
-            max-width: 600px; /* Increased max-width for a wider container */
+            max-width: 600px;
             padding: 20px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideInUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4285f4, #34a853, #fbbc05);
+            animation: shimmer 2s infinite;
         }
 
         .signup-section {
@@ -61,66 +80,151 @@
 
         .signup-section h2 {
             color: white;
-            margin-bottom: 25px;
-            font-size: 28px;
+            margin-bottom: 30px;
+            font-size: 32px;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
         }
 
         .input-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .input-group input,
         .input-group select {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            padding: 15px 18px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             font-size: 16px;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
             color: white;
+            backdrop-filter: blur(10px);
         }
 
         .input-group input:focus,
         .input-group select:focus {
             border-color: #4285f4;
-            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+            box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.2);
             outline: none;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .input-group input::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
 
+        .input-group select {
+            cursor: pointer;
+        }
+
+        .input-group select option {
+            background: #1a0f3d;
+            color: white;
+            padding: 10px;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-weak { background: #ff4444; width: 25%; }
+        .strength-fair { background: #ffaa00; width: 50%; }
+        .strength-good { background: #00aa00; width: 75%; }
+        .strength-strong { background: #00ff00; width: 100%; }
+
+        .password-match {
+            margin-top: 5px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .match-success { color: #00ff88; }
+        .match-error { color: #ff4444; }
+
         .btn {
             width: 100%;
-            padding: 12px;
+            padding: 18px;
             border: none;
-            border-radius: 8px;
-            background: #4285f4;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
             color: white;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
-            background: #3367d6;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
         }
 
         .register-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
             color: rgba(255, 255, 255, 0.8);
             font-size: 14px;
         }
@@ -128,11 +232,108 @@
         .register-link a {
             color: #4285f4;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .register-link a:hover {
+            color: #34a853;
             text-decoration: underline;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .password-input-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+        
+        .password-toggle:hover {
+            opacity: 1;
+        }
+        
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        
+        .input-group input[type="password"],
+        .input-group input[type="text"] {
+            padding-right: 45px;
         }
 
         @media (max-width: 768px) {
@@ -142,11 +343,25 @@
             }
 
             .container {
-                padding: 20px;
+                margin: 10px;
+                padding: 15px;
             }
 
             .signup-section {
-                max-width: 100%;
-                margin-bottom: 40px;
+                padding: 20px;
+            }
+
+            .signup-section h2 {
+                font-size: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group input,
+            .input-group select {
+                padding: 12px 15px;
+                font-size: 14px;
             }
         }

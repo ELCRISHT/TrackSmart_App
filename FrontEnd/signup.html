@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrackSmart - Sign Up</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/signup.css">
     <style>
         
     </style>
@@ -16,67 +16,268 @@
     </div>
 
     <div class="container">
-        <!-- Sign Up Section -->
         <div class="signup-section">
-            <h2>Create your account</h2>
+            <h2>Create Your Account</h2>
+            
+            <div class="success-message" id="successMessage">
+                Account created successfully! Welcome to TrackSmart.
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                Please check your information and try again.
+            </div>
+            
             <form id="signupForm">
-                <div class="input-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Enter your name" required>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="name">First Name</label>
+                        <input type="text" id="name" placeholder="Enter your first name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Enter your last name" required>
+                    </div>
                 </div>
+                
                 <div class="input-group">
                     <label for="middleName">Middle Name (Optional)</label>
                     <input type="text" id="middleName" placeholder="Enter your middle name">
                 </div>
-                <div class="input-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" placeholder="Enter your last name" required>
+                
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="birthday">Birthday</label>
+                        <input type="date" id="birthday" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" required>
+                            <option value="">Select your gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="non-binary">Non-binary</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="birthday">Birthday</label>
-                    <input type="date" id="birthday" required>
-                </div>
-                <div class="input-group">
-                    <label for="gender">Gender</label>
-                    <select id="gender" required>
-                        <option value="">Select your gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+                
                 <div class="input-group">
                     <label for="contactNumber">Contact Number</label>
                     <input type="tel" id="contactNumber" placeholder="Enter your contact number" required>
                 </div>
+                
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" placeholder="Enter your email" required>
                 </div>
+                
                 <div class="input-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <div class="password-input-container">
+                        <input type="password" id="password" placeholder="Create a strong password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            <svg id="password-eye" viewBox="0 0 24 24">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                    </div>
                 </div>
+                
                 <div class="input-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                    <div class="password-input-container">
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                            <svg id="confirmPassword-eye" viewBox="0 0 24 24">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="password-match" id="passwordMatch"></div>
                 </div>
+                
                 <div class="input-group">
                     <label for="role">Role</label>
                     <select id="role" required>
                         <option value="">Select your role</option>
                         <option value="teacher">Teacher</option>
                         <option value="student">Student</option>
+                        <option value="admin">Administrator</option>
                     </select>
                 </div>
-                <button type="submit" class="btn">Sign Up</button>
+                
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                
+                <button type="submit" class="btn" id="submitBtn">Create Account</button>
+                
                 <div class="register-link">
-                    Already have an account? <a href="index.html">Log in now</a>
+                    Already have an account? <a href="index.html" onclick="showLoginMessage()">Sign in here</a>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="script/auth.js"></script>
+    <script>
+        // Form validation and interactions
+        const form = document.getElementById('signupForm');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+        const passwordMatchDiv = document.getElementById('passwordMatch');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Password visibility toggle
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(inputId + '-eye');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"/>';
+            } else {
+                input.type = 'password';
+                eyeIcon.innerHTML = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+            }
+        }
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const checks = [
+                /.{8,}/, // At least 8 characters
+                /[a-z]/, // Lowercase letter
+                /[A-Z]/, // Uppercase letter
+                /[0-9]/, // Number
+                /[^A-Za-z0-9]/ // Special character
+            ];
+
+            checks.forEach(check => {
+                if (check.test(password)) strength++;
+            });
+
+            return strength;
+        }
+
+        // Update password strength indicator
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const strength = checkPasswordStrength(password);
+            
+            passwordStrengthBar.className = 'password-strength-bar';
+            
+            if (password.length === 0) {
+                passwordStrengthBar.className = 'password-strength-bar';
+            } else if (strength <= 2) {
+                passwordStrengthBar.className = 'password-strength-bar strength-weak';
+            } else if (strength === 3) {
+                passwordStrengthBar.className = 'password-strength-bar strength-fair';
+            } else if (strength === 4) {
+                passwordStrengthBar.className = 'password-strength-bar strength-good';
+            } else {
+                passwordStrengthBar.className = 'password-strength-bar strength-strong';
+            }
+        });
+
+        // Check password match
+        function checkPasswordMatch() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (confirmPassword.length === 0) {
+                passwordMatchDiv.textContent = '';
+                passwordMatchDiv.className = 'password-match';
+                return true;
+            }
+
+            if (password === confirmPassword) {
+                passwordMatchDiv.textContent = '✓ Passwords match';
+                passwordMatchDiv.className = 'password-match match-success';
+                return true;
+            } else {
+                passwordMatchDiv.textContent = '✗ Passwords do not match';
+                passwordMatchDiv.className = 'password-match match-error';
+                return false;
+            }
+        }
+
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+        passwordInput.addEventListener('input', checkPasswordMatch);
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Validate form
+            if (!checkPasswordMatch()) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            const passwordStrength = checkPasswordStrength(passwordInput.value);
+            if (passwordStrength < 3) {
+                showError('Please choose a stronger password');
+                return;
+            }
+
+            // Show loading
+            submitBtn.style.display = 'none';
+            loadingSpinner.style.display = 'block';
+
+            // Simulate API call
+            setTimeout(() => {
+                // Hide loading
+                loadingSpinner.style.display = 'none';
+                submitBtn.style.display = 'block';
+                
+                // Show success (in real app, this would depend on API response)
+                showSuccess();
+            }, 2000);
+        });
+
+        function showSuccess() {
+            successMessage.style.display = 'block';
+            form.reset();
+            passwordStrengthBar.className = 'password-strength-bar';
+            passwordMatchDiv.textContent = '';
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Auto-format phone number
+        document.getElementById('contactNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{3})(\d{3})/, '($1) $2');
+            }
+            e.target.value = value;
+        });
+
+        // Validate age (must be at least 13)
+        document.getElementById('birthday').addEventListener('change', function(e) {
+            const birthday = new Date(e.target.value);
+            const today = new Date();
+            const age = today.getFullYear() - birthday.getFullYear();
+            
+            if (age < 13) {
+                showError('You must be at least 13 years old to sign up');
+                e.target.value = '';
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Meeting - Meet Clone</title>
+    <link rel="stylesheet" href="styles/meeting_conference.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="meeting-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="meeting-info">
+                <div class="meeting-time" id="meetingTime">10:30 AM</div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                    ⛶
+                </button>
+                <button class="header-btn" onclick="toggleSettings()" title="Settings">
+                    ⚙
+                </button>
+                <button class="header-btn" onclick="showInfo()" title="Meeting Info">
+                    ℹ
+                </button>
+            </div>
+        </div>
+
+        <!-- Video Grid -->
+        <div class="video-grid" id="videoGrid">
+            <!-- Main Speaker -->
+            <div class="video-tile main-speaker speaking">
+                <div class="video-placeholder">
+                    <div class="avatar">JD</div>
+                </div>
+                <div class="participant-info">
+                    <div class="mic-indicator"></div>
+                    John Doe (You)
+                </div>
+            </div>
+
+            <!-- Other Participants -->
+            <div class="video-tile">
+                <div class="video-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="avatar">AS</div>
+                </div>
+                <div class="participant-info">
+                    <div class="mic-indicator muted"></div>
+                    Alice Smith
+                </div>
+            </div>
+
+            <div class="video-tile">
+                <div class="video-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="avatar">BJ</div>
+                </div>
+                <div class="participant-info">
+                    <div class="mic-indicator"></div>
+                    Bob Johnson
+                </div>
+            </div>
+
+            <div class="video-tile">
+                <div class="video-placeholder" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <div class="avatar">CD</div>
+                </div>
+                <div class="participant-info">
+                    <div class="mic-indicator muted"></div>
+                    Carol Davis
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn primary" id="micBtn" onclick="toggleMic()" title="Toggle Microphone">
+                🎤
+            </button>
+            <button class="control-btn primary" id="cameraBtn" onclick="toggleCamera()" title="Toggle Camera">
+                📹
+            </button>
+            <button class="control-btn primary" onclick="shareScreen()" title="Share Screen">
+                📺
+            </button>
+            <button class="control-btn primary" onclick="toggleChat()" title="Chat">
+                💬
+            </button>
+            <button class="control-btn primary" onclick="toggleParticipants()" title="Participants">
+                👥
+            </button>
+            <button class="control-btn primary" onclick="raiseHand()" title="Raise Hand">
+                ✋
+            </button>
+            <button class="control-btn danger" onclick="leaveMeeting()" title="Leave Meeting">
+                📞
+            </button>
+        </div>
+
+        <!-- Participants Panel -->
+        <div class="participants-panel" id="participantsPanel">
+            <div class="participants-header">
+                <span>Participants (4)</span>
+                <button class="header-btn" onclick="toggleParticipants()">✕</button>
+            </div>
+            <div class="participant-item">
+                <div class="participant-avatar">JD</div>
+                <div>
+                    <div>John Doe (You)</div>
+                    <div style="font-size: 12px; color: #888;">Host</div>
+                </div>
+            </div>
+            <div class="participant-item">
+                <div class="participant-avatar" style="background: #f5576c;">AS</div>
+                <div>
+                    <div>Alice Smith</div>
+                    <div style="font-size: 12px; color: #888;">Muted</div>
+                </div>
+            </div>
+            <div class="participant-item">
+                <div class="participant-avatar" style="background: #00f2fe;">BJ</div>
+                <div>
+                    <div>Bob Johnson</div>
+                    <div style="font-size: 12px; color: #888;">Speaking</div>
+                </div>
+            </div>
+            <div class="participant-item">
+                <div class="participant-avatar" style="background: #38f9d7;">CD</div>
+                <div>
+                    <div>Carol Davis</div>
+                    <div style="font-size: 12px; color: #888;">Muted</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="chat-panel" id="chatPanel">
+            <div class="chat-header">
+                <span>Meeting Chat</span>
+                <button class="header-btn" onclick="toggleChat()">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message">
+                    <div class="chat-message-header">Alice Smith • 10:25 AM</div>
+                    <div class="chat-message-text">Thanks for joining everyone! 👋</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-message-header">Bob Johnson • 10:28 AM</div>
+                    <div class="chat-message-text">Can we start with the quarterly review?</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-message-header">Carol Davis • 10:29 AM</div>
+                    <div class="chat-message-text">Sure! I have the slides ready to share.</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-message-header">Alice Smith • 10:30 AM</div>
+                    <div class="chat-message-text">Perfect! Let's get started then. 🎯</div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <div class="chat-input-container">
+                    <input type="text" placeholder="Send a message to everyone..." onkeypress="sendMessage(event)" id="chatInput">
+                    <button class="send-btn" onclick="sendChatMessage()" id="sendBtn">
+                        ➤
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div class="notification" id="notification"></div>
+    </div>
+
+    <script>
+        let isMicOn = true;
+        let isCameraOn = true;
+        let isParticipantsPanelOpen = false;
+        let isChatPanelOpen = false;
+
+        // Update meeting time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('meetingTime').textContent = timeString;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function toggleMic() {
+            isMicOn = !isMicOn;
+            const micBtn = document.getElementById('micBtn');
+            
+            if (isMicOn) {
+                micBtn.classList.remove('muted');
+                micBtn.textContent = '🎤';
+                showNotification('Microphone turned on');
+            } else {
+                micBtn.classList.add('muted');
+                micBtn.textContent = '🎤';
+                showNotification('Microphone turned off');
+            }
+        }
+
+        function toggleCamera() {
+            isCameraOn = !isCameraOn;
+            const cameraBtn = document.getElementById('cameraBtn');
+            
+            if (isCameraOn) {
+                cameraBtn.classList.remove('muted');
+                cameraBtn.textContent = '📹';
+                showNotification('Camera turned on');
+            } else {
+                cameraBtn.classList.add('muted');
+                cameraBtn.textContent = '📹';
+                showNotification('Camera turned off');
+            }
+        }
+
+        function shareScreen() {
+            showNotification('Screen sharing started');
+        }
+
+        function toggleParticipants() {
+            isParticipantsPanelOpen = !isParticipantsPanelOpen;
+            const panel = document.getElementById('participantsPanel');
+            
+            if (isParticipantsPanelOpen) {
+                panel.classList.add('open');
+                if (isChatPanelOpen) {
+                    toggleChat();
+                }
+            } else {
+                panel.classList.remove('open');
+            }
+        }
+
+        function toggleChat() {
+            isChatPanelOpen = !isChatPanelOpen;
+            const panel = document.getElementById('chatPanel');
+            
+            if (isChatPanelOpen) {
+                panel.classList.add('open');
+                if (isParticipantsPanelOpen) {
+                    toggleParticipants();
+                }
+            } else {
+                panel.classList.remove('open');
+            }
+        }
+
+        function raiseHand() {
+            showNotification('Hand raised');
+            setTimeout(() => {
+                showNotification('Hand lowered');
+            }, 3000);
+        }
+
+        function leaveMeeting() {
+            if (confirm('Are you sure you want to leave the meeting?')) {
+                showNotification('You left the meeting');
+                setTimeout(() => {
+                    document.body.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: #202124; color: white; font-family: Arial, sans-serif;"><div style="text-align: center;"><h1>You left the meeting</h1><p>Thanks for joining!</p></div></div>';
+                }, 1000);
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                showNotification('Entered fullscreen');
+            } else {
+                document.exitFullscreen();
+                showNotification('Exited fullscreen');
+            }
+        }
+
+        function toggleSettings() {
+            showNotification('Settings panel opened');
+        }
+
+        function showInfo() {
+            showNotification('Meeting ID: 123-456-789');
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                
+                if (message) {
+                    const chatMessages = document.getElementById('chatMessages');
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const messageDiv = document.createElement('div');
+                    messageDiv.style.marginBottom = '16px';
+                    messageDiv.style.padding = '8px 12px';
+                    messageDiv.style.background = 'rgba(66, 133, 244, 0.2)';
+                    messageDiv.style.borderRadius = '8px';
+                    messageDiv.innerHTML = `
+                        <div style="font-size: 12px; color: #888; margin-bottom: 4px;">You • ${timeString}</div>
+                        <div>${message}</div>
+                    `;
+                    
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    input.value = '';
+                }
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Simulate participant activity
+        setInterval(() => {
+            const tiles = document.querySelectorAll('.video-tile:not(.main-speaker)');
+            tiles.forEach(tile => tile.classList.remove('speaking'));
+            
+            if (Math.random() > 0.7) {
+                const randomTile = tiles[Math.floor(Math.random() * tiles.length)];
+                randomTile.classList.add('speaking');
+            }
+        }, 3000);
+
+        // Initialize chat as open by default
+        window.onload = function() {
+            toggleChat();
+        };
+
+        // Add some keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'd':
+                        e.preventDefault();
+                        toggleMic();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        toggleCamera();
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        toggleChat();
+                        break;
+                    case 'p':
+                        e.preventDefault();
+                        toggleParticipants();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
